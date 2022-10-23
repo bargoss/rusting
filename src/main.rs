@@ -12,7 +12,7 @@ mod grids;
 
 fn main(){
     // emirs_space_main();
-    println!("Real EnginEeers Use C...");
+    println!("Real EnginEeers Use Rust...");
 
     //box_example_main();
     grid_experiment();
