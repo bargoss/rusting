@@ -1,8 +1,13 @@
 pub mod experiments0_stuff{
-    // google search and get the first result
-    fn search(query: &str) -> usize {
-        println!("query: {}", query);
-        42
+    struct SerializableComponent<T>{
+        data: T
+    }
+    impl<T> SerializableComponent<T>{
+        fn new(data: T) -> Self{
+            Self{
+                data
+            }
+        }
     }
 
     pub fn main() {
