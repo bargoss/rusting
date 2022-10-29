@@ -1,4 +1,8 @@
-use std::io::{Read, Write};
+use crate::factory_experiment::factory_experiment_mod::factory_experiment_main;
+mod factory_experiment;
+
+
+use std::io::{Error, Read, Write};
 use byteorder::{ReadBytesExt, WriteBytesExt};
 use memstream::MemStream;
 
@@ -9,6 +13,9 @@ pub trait Serializable {
     fn deserialize(stream: &mut MemStream) -> Result<Self, std::io::Error>
     where
         Self: Sized;
+}
+pub trait Command: Serializable {
+    fn execute(&self);
 }
 
 
@@ -87,10 +94,10 @@ impl Serializable for Health{
 }
 
 
+
 struct Factory{
 
 }
-
 impl Factory{
     // read first byte and go to switch case
     fn from_stream(stream: &mut MemStream) -> Result<Box<dyn Serializable>, std::io::Error>{
@@ -116,7 +123,89 @@ impl Factory{
 
 }
 
+struct PrintCommand{
+    msg : String
+}
+
+impl Serializable for PrintCommand {
+    fn serialize(&self, stream: &mut MemStream) -> Result<(), Error> {
+        stream.write_u8(0)?;
+        stream.write_u32::<byteorder::LittleEndian>(self.msg.len() as u32)?;
+        stream.write_all(self.msg.as_bytes())?;
+        Ok(())
+    }
+
+    fn deserialize(stream: &mut MemStream) -> Result<Self, Error> where Self: Sized {
+        let len = stream.read_u32::<byteorder::LittleEndian>()?;
+        let mut buf = vec![0; len as usize];
+        stream.read_exact(&mut buf)?;
+        let msg = String::from_utf8(buf).unwrap();
+        Ok(PrintCommand{msg})
+    }
+}
+
+impl Command for PrintCommand{
+    fn execute(&self){
+        println!("{}", self.msg);
+    }
+}
+
+
+struct SleepCommand{
+    milliseconds : i32
+}
+
+impl Serializable for SleepCommand {
+    fn serialize(&self, stream: &mut MemStream) -> Result<(), Error> {
+        stream.write_u8(1)?;
+        stream.write_i32::<byteorder::LittleEndian>(self.milliseconds)?;
+        Ok(())
+    }
+
+    fn deserialize(stream: &mut MemStream) -> Result<Self, Error> where Self: Sized {
+        let milliseconds = stream.read_i32::<byteorder::LittleEndian>()?;
+        Ok(SleepCommand{milliseconds})
+    }
+}
+
+
+
+struct PrintColoredCommand{
+    msg : String,
+    colorR : i32,
+    colorG : i32,
+    colorB : i32
+}
+
+impl Serializable for PrintColoredCommand {
+    fn serialize(&self, stream: &mut MemStream) -> Result<(), Error> {
+        stream.write_u8(2)?;
+        stream.write_u32::<byteorder::LittleEndian>(self.msg.len() as u32)?;
+        stream.write_all(self.msg.as_bytes())?;
+        stream.write_i32::<byteorder::LittleEndian>(self.colorR)?;
+        stream.write_i32::<byteorder::LittleEndian>(self.colorG)?;
+        stream.write_i32::<byteorder::LittleEndian>(self.colorB)?;
+        Ok(())
+    }
+
+    fn deserialize(stream: &mut MemStream) -> Result<Self, Error> where Self: Sized {
+        let len = stream.read_u32::<byteorder::LittleEndian>()?;
+        let mut buf = vec![0; len as usize];
+        stream.read_exact(&mut buf)?;
+        let msg = String::from_utf8(buf).unwrap();
+        let colorR = stream.read_i32::<byteorder::LittleEndian>()?;
+        let colorG = stream.read_i32::<byteorder::LittleEndian>()?;
+        let colorB = stream.read_i32::<byteorder::LittleEndian>()?;
+        Ok(PrintColoredCommand{msg, colorR, colorG, colorB})
+    }
+}
+
+
 fn main() {
+    factory_experiment_main();
+
+
+    return;
     // create random byte array
     let mut stream = MemStream::new();
     let position = Position { point: Vector3 { x: 1, y: 2, z: 3 } };
@@ -138,9 +227,22 @@ fn main() {
 
     // read byte array
     let mut stream = MemStream::new();
-    stream.write_all(&bytes).unwrap();
+    //stream.write_all(&bytes).unwrap();
     // blocking seek
-    stream.seek(std::io::SeekFrom::Start(0)).unwrap();
+
+    // sleep the thread
+    std::thread::sleep(std::time::Duration::from_millis(1000));
+    println!("Hello, world!");
+    std::thread::sleep(std::time::Duration::from_millis(1000));
+    println!("Hello, world!");
+    std::thread::sleep(std::time::Duration::from_millis(1000));
+    println!("Hello, world!");
+    std::thread::sleep(std::time::Duration::from_millis(1000));
+    println!("Hello, world!");
+
+
+
+
 
     
 

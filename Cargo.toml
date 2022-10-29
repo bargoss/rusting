@@ -15,5 +15,5 @@ memstream = "0.0.1"
 byteorder = "1.4.3"
 flatbuffers = "22.9.29"
 tokio = { version = "1", features = ["full"] }
-
+cargo-expand = "1.0.34"
 

@@ -1,48 +1,27 @@
 pub mod factory_experiment_mod {
-    // use serde
-    pub use serde::{Serialize, Deserialize};
+    // do json serialization
+    use serde::{Deserialize, Serialize};
 
-    // objects that are created from the factory:
-    pub struct School {
-        pub id: i32,
-        pub name: String,
-        pub address: String
-    }
-    pub struct Student {
-        pub id: i32,
-        pub name: String,
-        pub age: u8,
-        pub schoolId: i32
-    }
-    pub struct Book {
-        pub id: i32,
-        pub name: String,
-        pub author: String,
-        pub pages: u16
-    }
-    pub struct BookBorrow {
-        pub id: i32,
-        pub studentId: i32,
-        pub bookId: i32,
-        pub borrowDate: String,
-        pub returnDate: String
-    }
 
-    // serializable point with serde
-    #[derive(Serialize, Deserialize)]
-    pub struct SchoolJson {
-        pub id: i32,
-        pub name: String,
-        pub address: String
+    #[derive(Serialize, Deserialize, Debug, Copy, Clone)]
+    struct Foo {
+        a: i32,
+        b: i32,
     }
 
 
 
+    pub fn factory_experiment_main() {
+        let a = Foo {a:1,b:2};
+        let b = Foo {a:3,b:4};
+
+        // json serialize
+        let a_json = serde_json::to_string(&a).unwrap();
+
+        println!("a_json: {}", a_json);
 
 
 
 
-    pub fn factory_experiment_main(){
-        println!("Factory Experiment");
     }
 }
