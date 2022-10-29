@@ -1,0 +1,34 @@
+use serde::{Serialize, Deserialize};
+#[derive(Serialize, Deserialize, Debug)]
+
+
+
+
+
+fn binary_read_write_experiment() {
+    use byteorder::{ReadBytesExt, WriteBytesExt};
+    use memstream::MemStream;
+    // create a memstream
+    let mut stream = MemStream::new();
+
+    // write an int to stream
+    stream.write_i32::<byteorder::BigEndian>(42).expect("write failed");
+
+    // write a point to stream
+    let point = Point { x: 1, y: 2 };
+    stream.write_i32::<byteorder::BigEndian>(point.x).expect("write failed");
+    stream.write_i32::<byteorder::BigEndian>(point.y).expect("write failed");
+
+
+    // read an int from stream
+    let dada = stream.read_i32::<byteorder::BigEndian>().expect("read failed");
+    println!("dada: {}", dada);
+
+    // read a point from stream
+    let x = stream.read_i32::<byteorder::BigEndian>().expect("read failed");
+    let y = stream.read_i32::<byteorder::BigEndian>().expect("read failed");
+    let point = Point { x, y };
+    println!("point: {:?}", point);
+
+
+}

@@ -1,21 +1,13 @@
-use crate::grids::board_logic::grid_experiment;
-mod grids;
-//mod box_example;
-//use crate::emirs_space::emirs_space::main as emirs_space_main;
-//mod emirs_space;
-//mod experiments0;
-//
-//use crate::experiments0::experiments0_stuff::main as experiments0_main;
-//
-//
-//use crate::box_example::box_example::main as box_example_main;
+// use tokio create simple async main that prints hello
 
-fn main(){
-    // emirs_space_main();
-    println!("Real EnginEeers Use C...");
+use tokio::time::{sleep, Duration};
 
-    //box_example_main();
-    grid_experiment();
-    //experiments0_main();
-    //grid_experiment0();
+#[tokio::main]
+async fn main() {
+    sleep(Duration::from_secs(1)).await;
+    println!("Hello, world!");
 }
+
+
+
+
