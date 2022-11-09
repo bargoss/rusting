@@ -1,21 +1,46 @@
-use crate::grids::board_logic::grid_experiment;
-mod grids;
-//mod box_example;
-//use crate::emirs_space::emirs_space::main as emirs_space_main;
-//mod emirs_space;
-//mod experiments0;
-//
-//use crate::experiments0::experiments0_stuff::main as experiments0_main;
-//
-//
-//use crate::box_example::box_example::main as box_example_main;
+#![feature(proc_macro_hygiene, decl_macro)]
 
-fn main(){
-    // emirs_space_main();
-    println!("Real EnginEeers Use Rust...");
 
-    //box_example_main();
-    grid_experiment();
-    //experiments0_main();
-    //grid_experiment0();
+#[macro_use] extern crate rocket;
+
+#[get("/")]
+fn index() -> &'static str {
+    "Hello, world!"
 }
+
+fn main() {
+    rocket::ignite().mount("/", routes![index]).launch();
+}
+
+//username:
+//asdasdajklj232
+//
+//pass:
+//asdasd97gf8asdad
+
+
+//use mongodb::{Client, options::{ClientOptions, ResolverConfig}};
+//use std::env;
+//use std::error::Error;
+//use tokio;
+//#[tokio::main]
+//async fn mongo_example() -> Result<(), Box<dyn Error>> {
+//    // Load the MongoDB connection string from an environment variable:
+//    let client_uri =
+//        env::var("MONGODB_URI").expect("You must set the MONGODB_URI environment var!");
+//
+//    // A Client is needed to connect to MongoDB:
+//    // An extra line of code to work around a DNS issue on Windows:
+//    let options =
+//        ClientOptions::parse_with_resolver_config(&client_uri, ResolverConfig::cloudflare())
+//            .await?;
+//    let client = Client::with_options(options)?;
+//
+//    // Print the databases in our MongoDB cluster:
+//    println!("Databases:");
+//    for name in client.list_database_names(None, None).await? {
+//        println!("- {}", name);
+//    }
+//
+//    Ok(())
+//}
